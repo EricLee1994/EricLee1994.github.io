@@ -1,0 +1,718 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang>
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Android,">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="前言&amp;emsp;&amp;emsp;最近项目中需要对AAR进行代码混淆，踩了不少坑，所以这里主要针对AAR混淆整理一下，方便以后的问题的解决。 混淆的优点   减小APK文件的大小 移除封装应用中未使用的类、字段、方法和属性 用短名称混淆其余的类、字段和方法，可令APK难以逆向工程。">
+<meta name="keywords" content="Android">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Android压缩代码（混淆）">
+<meta property="og:url" content="http://yoursite.com/2018/06/05/对于代码混淆的理解/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="前言&amp;emsp;&amp;emsp;最近项目中需要对AAR进行代码混淆，踩了不少坑，所以这里主要针对AAR混淆整理一下，方便以后的问题的解决。 混淆的优点   减小APK文件的大小 移除封装应用中未使用的类、字段、方法和属性 用短名称混淆其余的类、字段和方法，可令APK难以逆向工程。">
+<meta property="og:locale" content="default">
+<meta property="og:updated_time" content="2018-06-12T14:04:30.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Android压缩代码（混淆）">
+<meta name="twitter:description" content="前言&amp;emsp;&amp;emsp;最近项目中需要对AAR进行代码混淆，踩了不少坑，所以这里主要针对AAR混淆整理一下，方便以后的问题的解决。 混淆的优点   减小APK文件的大小 移除封装应用中未使用的类、字段、方法和属性 用短名称混淆其余的类、字段和方法，可令APK难以逆向工程。">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2018/06/05/对于代码混淆的理解/">
+
+
+
+
+
+  <title>Android压缩代码（混淆） | Hexo</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="default">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Hexo</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            Archives
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/06/05/对于代码混淆的理解/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="John Doe">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hexo">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Android压缩代码（混淆）</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-06-05T20:48:18+08:00">
+                2018-06-05
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <ul>
+<li><h3 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h3>&emsp;&emsp;最近项目中需要对AAR进行代码混淆，踩了不少坑，所以这里主要针对AAR混淆整理一下，方便以后的问题的解决。</li>
+<li><h3 id="混淆的优点"><a href="#混淆的优点" class="headerlink" title="混淆的优点"></a>混淆的优点</h3></li>
+</ul>
+<ol>
+<li>减小APK文件的大小</li>
+<li>移除封装应用中未使用的类、字段、方法和属性</li>
+<li>用短名称混淆其余的类、字段和方法，可令APK难以逆向工程。</li>
+</ol>
+<a id="more"></a>
+<ul>
+<li><h3 id="混淆的缺点"><a href="#混淆的缺点" class="headerlink" title="混淆的缺点"></a>混淆的缺点</h3></li>
+</ul>
+<ol>
+<li>拖慢项目的构建速度</li>
+</ol>
+<ul>
+<li><h3 id="如何开启混淆"><a href="#如何开启混淆" class="headerlink" title="如何开启混淆"></a>如何开启混淆</h3>&emsp;&emsp;在build.gradle文件中设置：<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">android&#123;</span><br><span class="line">    buildTypes &#123;</span><br><span class="line">        release &#123;</span><br><span class="line">            minifyEnabled true</span><br><span class="line">            proguardFiles getDefaultProguardFile(&apos;proguard-android.txt&apos;), &apos;proguard-rules.pro&apos;</span><br><span class="line">        &#125;</span><br><span class="line">        debug &#123;</span><br><span class="line">            minifyEnabled false</span><br><span class="line">            proguardFiles getDefaultProguardFile(&apos;proguard-android.txt&apos;), &apos;proguard-rules.pro&apos;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>&emsp;&emsp;这里<strong>minifyEnabled</strong>就是控制是否开启混淆的（这里要注意区分release和debug）。而<strong>proguard-rules.pro</strong>这个文件就是用来配置混淆的。</p>
+<ul>
+<li><h3 id="配置混淆文件"><a href="#配置混淆文件" class="headerlink" title="配置混淆文件"></a>配置混淆文件</h3></li>
+</ul>
+<ol>
+<li><h5 id="不能混淆的文件"><a href="#不能混淆的文件" class="headerlink" title="不能混淆的文件"></a>不能混淆的文件</h5></li>
+</ol>
+<p>&emsp;&emsp;比如四大组件、自定义View、实体类、枚举类、序列化类、第三方jar包等等。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br></pre></td><td class="code"><pre><span class="line">-keep public class * extends android.app.Activity</span><br><span class="line">-keep public class * extends android.app.Application</span><br><span class="line">-keep public class * extends android.app.Service</span><br><span class="line">-keep public class * extends android.content.BroadcastReceiver</span><br><span class="line">-keep public class * extends android.content.ContentProvider</span><br><span class="line">-keep public class * extends android.app.backup.BackupAgentHelper</span><br><span class="line">-keep public class * extends android.preference.Preference</span><br><span class="line">-keep public class * extends android.view.View</span><br><span class="line">-keep public class com.android.vending.licensing.ILicensingService</span><br><span class="line">-keep class android.support.** &#123;*;&#125;</span><br><span class="line"></span><br><span class="line">-keepclasseswithmembernames class * &#123;</span><br><span class="line">    native &lt;methods&gt;;</span><br><span class="line">&#125;</span><br><span class="line">-keepclassmembers class * extends android.app.Activity&#123;</span><br><span class="line">    public void *(android.view.View);</span><br><span class="line">&#125;</span><br><span class="line">-keep public class * extends android.view.View&#123;</span><br><span class="line">    *** get*();</span><br><span class="line">    void set*(***);</span><br><span class="line">    public &lt;init&gt;(android.content.Context);</span><br><span class="line">    public &lt;init&gt;(android.content.Context, android.util.AttributeSet);</span><br><span class="line">    public &lt;init&gt;(android.content.Context, android.util.AttributeSet, int);</span><br><span class="line">&#125;</span><br><span class="line">-keepclasseswithmembers class * &#123;</span><br><span class="line">    public &lt;init&gt;(android.content.Context, android.util.AttributeSet);</span><br><span class="line">    public &lt;init&gt;(android.content.Context, android.util.AttributeSet, int);</span><br><span class="line">&#125;</span><br><span class="line">-keep class * implements android.os.Parcelable &#123;</span><br><span class="line">  public static final android.os.Parcelable$Creator *;</span><br><span class="line">&#125;</span><br><span class="line">-keepclassmembers class * implements java.io.Serializable &#123;</span><br><span class="line">    static final long serialVersionUID;</span><br><span class="line">    private static final java.io.ObjectStreamField[] serialPersistentFields;</span><br><span class="line">    private void writeObject(java.io.ObjectOutputStream);</span><br><span class="line">    private void readObject(java.io.ObjectInputStream);</span><br><span class="line">    java.lang.Object writeReplace();</span><br><span class="line">    java.lang.Object readResolve();</span><br><span class="line">&#125;</span><br><span class="line">-keep class **.R$* &#123;</span><br><span class="line"> *;</span><br><span class="line">&#125;</span><br><span class="line">-keepclassmembers class * &#123;</span><br><span class="line">    void *(**On*Event);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>&emsp;&emsp;一些第三方jar包的使用说明中也会有混淆说明，需要自行去添加，这里就不举例说明了。接下来就是针对自己项目的需求进行混淆了，比如因为我是一个AAR，所以一些暴露出来的接口就不能被混淆，还有自己的实体类也不能混淆（所以把实体类归在一个包下是最方便的了）。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">-keep class com.eric.android.hs.activity.HSVideoSDK&#123;*;&#125;</span><br><span class="line">-keep class com.eric.android.hs.bean.**&#123;*;&#125;</span><br><span class="line">-keep class com.eric.android.hs.callback.HSSDKListener&#123;*;&#125;</span><br></pre></td></tr></table></figure>
+<p>&emsp;&emsp;好，这时候我们开始编译，大功告成了？怕是想多了。</p>
+<ol start="2">
+<li><h5 id="可能遇到的问题"><a href="#可能遇到的问题" class="headerlink" title="可能遇到的问题"></a>可能遇到的问题</h5>&emsp;&emsp;紧接着我们可能会遇到类似这样的问题。<h6 id="1-报出许多Warning"><a href="#1-报出许多Warning" class="headerlink" title="1. 报出许多Warning"></a>1. 报出许多Warning</h6><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">Warning:android.http.b: can&apos;t find referenced class java.lang.invoke.LambdaForm$Hidden</span><br><span class="line">Warning:com.ainemo.a.c: can&apos;t find referenced class java.lang.invoke.LambdaForm$Hidden</span><br><span class="line">Warning:com.ainemo.a.d: can&apos;t find referenced class java.lang.invoke.LambdaForm$Hidden</span><br><span class="line">Warning:com.ainemo.a.e: can&apos;t find referenced class java.lang.invoke.LambdaForm$Hidden</span><br><span class="line">Warning:com.ainemo.a.f: can&apos;t find referenced class java.lang.invoke.LambdaForm$Hidden</span><br><span class="line">....</span><br><span class="line">Warning:there were 80 unresolved references to classes or interfaces.</span><br><span class="line">Warning:there were 2 unresolved references to program class members.</span><br><span class="line">Warning:Exception while processing task java.io.IOException: Please correct the above warnings first.</span><br><span class="line">Error:Execution failed for task &apos;:heysharevideo:transformClassesAndResourcesWithProguardForDebug&apos;.</span><br><span class="line">&gt; Job failed, see logs for details</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<p>&emsp;&emsp;虽然不知道为什么会有这么多警告，反正我目前的解决方法就是警告什么，我就设置忽略警告。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">-dontwarn com.ainemo.a.**</span><br><span class="line">-dontwarn com.ainemo.sdk.module.**</span><br><span class="line">-dontwarn android.http.b</span><br><span class="line">-dontwarn com.ainemo.sdk.otf.**</span><br><span class="line">-dontwarn vulture.module.call.**</span><br></pre></td></tr></table></figure></p>
+<h6 id="2-jar包被重复声明"><a href="#2-jar包被重复声明" class="headerlink" title="2. jar包被重复声明"></a>2. jar包被重复声明</h6><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Warning:Exception while processing task java.io.IOException: The same input jar [D:\ASProject\HSVideosdkDemo\heysharevideo\libs\gson-2.7.jar] is specified twice.</span><br><span class="line">Error:Execution failed for task &apos;:heysharevideo:transformClassesAndResourcesWithProguardForDebug&apos;.&gt; Job failed, see logs for details</span><br></pre></td></tr></table></figure>
+<p>&emsp;&emsp;这里的原因应该是在Android Studio中的build.gradle里，这句话<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">implementation fileTree(include: [&apos;*.jar&apos;], dir: &apos;libs&apos;)</span><br></pre></td></tr></table></figure></p>
+<p>&emsp;&emsp;默认将libs里的jar包进行排除混淆，所以<strong>无需</strong>在混淆配置里像这样声明：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">-libraryjars libs/gson-2.7.jar</span><br></pre></td></tr></table></figure></p>
+<h6 id="3-项目相关的问题"><a href="#3-项目相关的问题" class="headerlink" title="3. 项目相关的问题"></a>3. 项目相关的问题</h6><p>&emsp;&emsp;这时候你可能已经可以编译AAR了，但是使用起来可能还是会报错。大部分原因是你混淆了不能混淆的代码，这时候就需要你根据异常信息找到相关的文件，在proguard-rules.pro进行不混淆。</p>
+<p>&emsp;&emsp;为了方便异常信息追踪，我们可以保留代码行号:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">-keepattributes SourceFile,LineNumberTable</span><br></pre></td></tr></table></figure></p>
+<p>&emsp;&emsp;找到相关文件，然后不混淆：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">-keep class com.eric.android.hs.**&#123;*;&#125;//**可以换成具体类名，*可以换成具体的字段</span><br></pre></td></tr></table></figure></p>
+<p>&emsp;&emsp;这里就需要大家自行操作了。</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Android/" rel="tag"># Android</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/09/10/自定义View的拖拽吸附及点击事件/" rel="next" title="自定义View的拖拽吸附及点击事件">
+                <i class="fa fa-chevron-left"></i> 自定义View的拖拽吸附及点击事件
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/06/11/Java基础知识笔记/" rel="prev" title="Java基础知识笔记">
+                Java基础知识笔记 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">John Doe</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">15</span>
+                  <span class="site-state-item-name">posts</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                
+                  <span class="site-state-item-count">6</span>
+                  <span class="site-state-item-name">tags</span>
+                
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#前言"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#混淆的优点"><span class="nav-number">2.</span> <span class="nav-text">混淆的优点</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#混淆的缺点"><span class="nav-number">3.</span> <span class="nav-text">混淆的缺点</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#如何开启混淆"><span class="nav-number">4.</span> <span class="nav-text">如何开启混淆</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#配置混淆文件"><span class="nav-number">5.</span> <span class="nav-text">配置混淆文件</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#不能混淆的文件"><span class="nav-number">5.0.1.</span> <span class="nav-text">不能混淆的文件</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#可能遇到的问题"><span class="nav-number">5.0.2.</span> <span class="nav-text">可能遇到的问题</span></a><ol class="nav-child"><li class="nav-item nav-level-6"><a class="nav-link" href="#1-报出许多Warning"><span class="nav-number">5.0.2.1.</span> <span class="nav-text">1. 报出许多Warning</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#2-jar包被重复声明"><span class="nav-number">5.0.2.2.</span> <span class="nav-text">2. jar包被重复声明</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#3-项目相关的问题"><span class="nav-number">5.0.2.3.</span> <span class="nav-text">3. 项目相关的问题</span></a></li></ol></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">John Doe</span>
+
+  
+</div>
+
+
+  <div class="powered-by">Powered by <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a></div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Muse</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

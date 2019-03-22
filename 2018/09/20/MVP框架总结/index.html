@@ -1,0 +1,706 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang>
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Android,">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="前言&amp;emsp;&amp;emsp;在我看来，一个程序员如何从会写代码到写好代码，懂的根据项目需求合理的架构是一个关键。可能一些公司或程序员为了进度，不考虑架构，只为了满足需求，那么后期维护起来会异常麻烦。">
+<meta name="keywords" content="Android">
+<meta property="og:type" content="article">
+<meta property="og:title" content="MVP框架总结">
+<meta property="og:url" content="http://yoursite.com/2018/09/20/MVP框架总结/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="前言&amp;emsp;&amp;emsp;在我看来，一个程序员如何从会写代码到写好代码，懂的根据项目需求合理的架构是一个关键。可能一些公司或程序员为了进度，不考虑架构，只为了满足需求，那么后期维护起来会异常麻烦。">
+<meta property="og:locale" content="default">
+<meta property="og:updated_time" content="2018-09-20T11:39:24.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="MVP框架总结">
+<meta name="twitter:description" content="前言&amp;emsp;&amp;emsp;在我看来，一个程序员如何从会写代码到写好代码，懂的根据项目需求合理的架构是一个关键。可能一些公司或程序员为了进度，不考虑架构，只为了满足需求，那么后期维护起来会异常麻烦。">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2018/09/20/MVP框架总结/">
+
+
+
+
+
+  <title>MVP框架总结 | Hexo</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="default">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Hexo</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            Archives
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/09/20/MVP框架总结/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="John Doe">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hexo">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">MVP框架总结</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-09-20T19:37:22+08:00">
+                2018-09-20
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <ul>
+<li><h3 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h3>&emsp;&emsp;在我看来，一个程序员如何从会写代码到写好代码，懂的根据项目需求合理的架构是一个关键。可能一些公司或程序员为了进度，不考虑架构，只为了满足需求，那么后期维护起来会异常麻烦。</li>
+</ul>
+<a id="more"></a>
+<ul>
+<li><h3 id="MVP应用背景"><a href="#MVP应用背景" class="headerlink" title="MVP应用背景"></a>MVP应用背景</h3><p>&emsp;&emsp;在我们最初写Android代码时，经常在Activity里完成数据交互，UI更新，逻辑处理等操作，这导致我们的Activity里的代码可能成千上万行，当你想修改一个功能时，不仅修改的麻烦，而且极容易导致其他功能出现问题。那如何将Activity里的代码拆分开来，使代码变得一目了然呢？这里我们就可以使用MVP来帮助我们。</p>
+</li>
+<li><h3 id="MVP是什么？"><a href="#MVP是什么？" class="headerlink" title="MVP是什么？"></a>MVP是什么？</h3><p>&emsp;&emsp;学过编程的应该知道MVC，也就是Model,View,Controller。Activity在MVC中属于Controller层，但因为Android的特殊性，导致View层的操作大多只能在Activity中完成，导致了Activity的臃肿。这时候MVP应运而生，P代表了Presenter，作用是将View和Model连接起来，让它们解耦。View通过Presenter来操作数据，Model通过Presenter来更新View。</p>
+</li>
+<li><h3 id="MVP的优点和缺点"><a href="#MVP的优点和缺点" class="headerlink" title="MVP的优点和缺点"></a>MVP的优点和缺点</h3><p>&emsp;&emsp;的确使用MVP可能不会让你的程序运行的更快，但是对于开发者讲维护更加便利，逻辑更加清晰，降低了代码的耦合度。<br>&emsp;&emsp;缺点呢说实话，目前好像还没发现，如果硬要我找出一个的话，就是接口变得有点多？</p>
+</li>
+<li><h3 id="MVP的使用"><a href="#MVP的使用" class="headerlink" title="MVP的使用"></a>MVP的使用</h3><p>&emsp;&emsp;当时是读了Google官方的<a href="https://github.com/googlesamples/android-architecture/tree/todo-mvp" target="_blank" rel="noopener">Sample</a>，然后对现有项目进行架构替换。下面就简单的搭一个框架。</p>
+</li>
+</ul>
+<h4 id="1-BaseView"><a href="#1-BaseView" class="headerlink" title="1. BaseView"></a>1. BaseView</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">public interface BaseView&lt;T&gt; &#123;</span><br><span class="line">    void setPresenter(T presenter);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="2-BasePresenter"><a href="#2-BasePresenter" class="headerlink" title="2. BasePresenter"></a>2. BasePresenter</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">public interface BasePresenter &#123;</span><br><span class="line">    void start();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>&emsp;&emsp;这两个是View和Presenter的基类，所有的View和Presenter都会重写这里面的方法。</p>
+<h4 id="3-MessageContact"><a href="#3-MessageContact" class="headerlink" title="3. MessageContact"></a>3. MessageContact</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">public interface MessageContact &#123;</span><br><span class="line">    interface View extends BaseView&lt;Presenter&gt; &#123;</span><br><span class="line"></span><br><span class="line">        void showToast(String msg);</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    interface Presenter extends BasePresenter &#123;</span><br><span class="line"></span><br><span class="line">        void getData();</span><br><span class="line">        void sendMessage(String msg);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>&emsp;&emsp;这是一个契约类，它定义了一个模块的View和Prestener的所有接口，这里就简单的写了几个抽象的方法，来实现客户端向服务端收发信息。</p>
+<h4 id="4-MessageFragment"><a href="#4-MessageFragment" class="headerlink" title="4.MessageFragment"></a>4.MessageFragment</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line">public class MessageFragment extends Fragment implements MessageContact.View&#123;</span><br><span class="line"></span><br><span class="line">    public static MessageFragment newInstance() &#123;</span><br><span class="line">        return new MessageFragment();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    private MessageContact.Presenter presenter;</span><br><span class="line">    private Button button;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public void onCreate(@Nullable Bundle savedInstanceState) &#123;</span><br><span class="line">        super.onCreate(savedInstanceState);</span><br><span class="line">        button = new Button(getActivity());</span><br><span class="line">        button.setOnClickListener(new View.OnClickListener() &#123;</span><br><span class="line">            @Override</span><br><span class="line">            public void onClick(View v) &#123;</span><br><span class="line">                presenter.sendMessage(&quot;send message!&quot;);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public void showToast(String msg) &#123;</span><br><span class="line">        //todo</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public void setPresenter(MessageContact.Presenter presenter) &#123;</span><br><span class="line">        this.presenter = presenter;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>&emsp;&emsp;这里我们用一个Fragment来处理View的操作，实现点击button，向服务端发送信息，还有一个就是接受P层的回调来显示服务端发来的信息。</p>
+<h4 id="5-MessagePresenter"><a href="#5-MessagePresenter" class="headerlink" title="5.MessagePresenter"></a>5.MessagePresenter</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line">public class MessagePresenter implements MessageContact.Presenter&#123;</span><br><span class="line"></span><br><span class="line">    private final MessageRepository messageRepository;</span><br><span class="line">    private final MessageContact.View mMessageView;</span><br><span class="line"></span><br><span class="line">    public MessagePresenter(MessageRepository messageRepository, MessageContact.View mMessageView) &#123;</span><br><span class="line">        this.messageRepository = messageRepository;</span><br><span class="line">        this.mMessageView = mMessageView;</span><br><span class="line">        mMessageView.setPresenter(this);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public void getData() &#123;</span><br><span class="line">        messageRepository.getMessageCallback(new ServerDataSource.MessageCallback() &#123;</span><br><span class="line">            @Override</span><br><span class="line">            public void callback(String msg) &#123;</span><br><span class="line">                mMessageView.showToast(msg);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public void sendMessage(String msg) &#123;</span><br><span class="line">        messageRepository.sendMessageToServer(msg);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public void start() &#123;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>&emsp;&emsp;这里就是充当了界面与数据之间的桥梁，将主要的逻辑都放在这层处理，比如信息的过滤，增删改查等。</p>
+<h4 id="6-ServerDataSource"><a href="#6-ServerDataSource" class="headerlink" title="6.ServerDataSource"></a>6.ServerDataSource</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">public interface ServerDataSource &#123;</span><br><span class="line">    interface MessageCallback&#123;</span><br><span class="line">        void callback(String msg);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    void getMessageCallback(MessageCallback messageCallback);</span><br><span class="line"></span><br><span class="line">    void sendMessageToServer(String msg);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>&emsp;&emsp;这里主要是数据的处理，用来处理数据的发送和接受。</p>
+<h4 id="7-MessageRepository"><a href="#7-MessageRepository" class="headerlink" title="7.MessageRepository"></a>7.MessageRepository</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">public class MessageRepository implements ServerDataSource &#123;</span><br><span class="line"></span><br><span class="line">    private MessageCallback messageCallback;</span><br><span class="line">    private static MessageRepository INSTANCE = null;</span><br><span class="line"></span><br><span class="line">    private MessageRepository() &#123;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public static MessageRepository getInstance()&#123;</span><br><span class="line">        if (INSTANCE == null) &#123;</span><br><span class="line">            INSTANCE = new MessageRepository();</span><br><span class="line">        &#125;</span><br><span class="line">        return INSTANCE;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public void getMessageCallback(MessageCallback messageCallback) &#123;</span><br><span class="line">        this.messageCallback = messageCallback;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public void sendMessageToServer(String msg) &#123;</span><br><span class="line">        //todo</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>&emsp;&emsp;这里可以算是M层，比如通过Http去服务器请求完整的数据等，做一些json的解析，接受第三方sdk的回调等，都在这里处理，而P层可以说是对这些数据进行逻辑处理。</p>
+<h4 id="7-MainActivity"><a href="#7-MainActivity" class="headerlink" title="7.MainActivity"></a>7.MainActivity</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">public class MainActivity extends AppCompatActivity &#123;</span><br><span class="line"></span><br><span class="line">    private MessageFragment messageFragment;</span><br><span class="line">    private MessagePresenter messagePresenter;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    protected void onCreate(Bundle savedInstanceState) &#123;</span><br><span class="line">        super.onCreate(savedInstanceState);</span><br><span class="line">        setContentView(R.layout.activity_main);</span><br><span class="line">        if (messageFragment == null) &#123;</span><br><span class="line">            messageFragment = MessageFragment.newInstance();</span><br><span class="line">            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();</span><br><span class="line">            transaction.add(R.id.message_fragment, messageFragment);</span><br><span class="line">            transaction.commit();</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        messagePresenter = new MessagePresenter(MessageRepository.getInstance(), messageFragment);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>&emsp;&emsp;可以说MainActivity的作用就是把这三者连起来，大大减少了MainActivity里的代码量。</p>
+<ul>
+<li><h3 id="MVP的总结"><a href="#MVP的总结" class="headerlink" title="MVP的总结"></a>MVP的总结</h3>&emsp;&emsp;其实MVP的方式不止这一种，根据业务使用不同的MVP。可能开始适应MVP时，需要一定的学习成本，但运用熟练以后，带来的好处是显然的。</li>
+</ul>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Android/" rel="tag"># Android</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/09/16/Android中的IPC机制/" rel="next" title="Android中的IPC机制">
+                <i class="fa fa-chevron-left"></i> Android中的IPC机制
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/11/19/Activity生命周期和启动模式/" rel="prev" title="Activity生命周期和启动模式">
+                Activity生命周期和启动模式 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">John Doe</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">15</span>
+                  <span class="site-state-item-name">posts</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                
+                  <span class="site-state-item-count">6</span>
+                  <span class="site-state-item-name">tags</span>
+                
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#前言"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#MVP应用背景"><span class="nav-number">2.</span> <span class="nav-text">MVP应用背景</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#MVP是什么？"><span class="nav-number">3.</span> <span class="nav-text">MVP是什么？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#MVP的优点和缺点"><span class="nav-number">4.</span> <span class="nav-text">MVP的优点和缺点</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#MVP的使用"><span class="nav-number">5.</span> <span class="nav-text">MVP的使用</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-BaseView"><span class="nav-number">5.1.</span> <span class="nav-text">1. BaseView</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-BasePresenter"><span class="nav-number">5.2.</span> <span class="nav-text">2. BasePresenter</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-MessageContact"><span class="nav-number">5.3.</span> <span class="nav-text">3. MessageContact</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4-MessageFragment"><span class="nav-number">5.4.</span> <span class="nav-text">4.MessageFragment</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#5-MessagePresenter"><span class="nav-number">5.5.</span> <span class="nav-text">5.MessagePresenter</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#6-ServerDataSource"><span class="nav-number">5.6.</span> <span class="nav-text">6.ServerDataSource</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#7-MessageRepository"><span class="nav-number">5.7.</span> <span class="nav-text">7.MessageRepository</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#7-MainActivity"><span class="nav-number">5.8.</span> <span class="nav-text">7.MainActivity</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#MVP的总结"><span class="nav-number">6.</span> <span class="nav-text">MVP的总结</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">John Doe</span>
+
+  
+</div>
+
+
+  <div class="powered-by">Powered by <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a></div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Muse</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
