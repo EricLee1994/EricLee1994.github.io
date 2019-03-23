@@ -97,14 +97,14 @@
 
 
   <meta name="description" content="什么是IPC？&amp;emsp;&amp;emsp;IPC(Inter-Process Communication),指的是进程间的通信。一般来说，一个应用就有一个进程，它们有各自的内存，互不干涉。那么如何在两个进程之间进行通信呢，那么就需要IPC。首先我们得清楚，线程是CPU调度的最小单位，一个进程中可以有1个或者多个线程，一般来说一个app就是一个进程，可以只有一个主线程也可以同时拥有主线程和子线程，主线">
-<meta name="keywords" content="Android">
+<meta name="keywords" content="消息机制,IPC">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Android中的IPC机制">
 <meta property="og:url" content="http://yoursite.com/2018/09/16/Android中的IPC机制/index.html">
 <meta property="og:site_name" content="Eric&#39;s Blogs">
 <meta property="og:description" content="什么是IPC？&amp;emsp;&amp;emsp;IPC(Inter-Process Communication),指的是进程间的通信。一般来说，一个应用就有一个进程，它们有各自的内存，互不干涉。那么如何在两个进程之间进行通信呢，那么就需要IPC。首先我们得清楚，线程是CPU调度的最小单位，一个进程中可以有1个或者多个线程，一般来说一个app就是一个进程，可以只有一个主线程也可以同时拥有主线程和子线程，主线">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2018-09-16T14:09:11.000Z">
+<meta property="og:updated_time" content="2019-03-23T16:25:26.004Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Android中的IPC机制">
 <meta name="twitter:description" content="什么是IPC？&amp;emsp;&amp;emsp;IPC(Inter-Process Communication),指的是进程间的通信。一般来说，一个应用就有一个进程，它们有各自的内存，互不干涉。那么如何在两个进程之间进行通信呢，那么就需要IPC。首先我们得清楚，线程是CPU调度的最小单位，一个进程中可以有1个或者多个线程，一般来说一个app就是一个进程，可以只有一个主线程也可以同时拥有主线程和子线程，主线">
@@ -366,16 +366,46 @@
                 
               
 
-              <time title="Created: 2018-09-16 22:08:29 / Modified: 22:09:11" itemprop="dateCreated datePublished" datetime="2018-09-16T22:08:29+08:00">2018-09-16</time>
+              <time title="Created: 2018-09-16 22:08:29" itemprop="dateCreated datePublished" datetime="2018-09-16T22:08:29+08:00">2018-09-16</time>
             
 
             
               
 
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">Edited on</span>
+                
+                <time title="Modified: 2019-03-24 00:25:26" itemprop="dateModified" datetime="2019-03-24T00:25:26+08:00">2019-03-24</time>
               
             
           </span>
 
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Android/" itemprop="url" rel="index"><span itemprop="name">Android</span></a></span>
+
+                
+                
+              
+            </span>
           
 
           
@@ -445,7 +475,9 @@
       
         <div class="post-tags">
           
-            <a href="/tags/Android/" rel="tag"># Android</a>
+            <a href="/tags/消息机制/" rel="tag"># 消息机制</a>
+          
+            <a href="/tags/IPC/" rel="tag"># IPC</a>
           
         </div>
       
@@ -541,7 +573,7 @@
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">16</span>
+                    <span class="site-state-item-count">15</span>
                     <span class="site-state-item-name">posts</span>
                   </a>
                 </div>
@@ -562,7 +594,9 @@
                     
                       
                     
-                    <span class="site-state-item-count">2</span>
+                      
+                    
+                    <span class="site-state-item-count">3</span>
                     <span class="site-state-item-name">categories</span>
                   </a>
                 </div>
@@ -615,7 +649,17 @@
                     
                       
                     
-                    <span class="site-state-item-count">18</span>
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">21</span>
                     <span class="site-state-item-name">tags</span>
                   </a>
                 </div>

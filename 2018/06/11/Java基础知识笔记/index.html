@@ -96,18 +96,18 @@
 
 
 
-  <meta name="description" content="父类构造函数中调用多态行为的函数&amp;emsp;&amp;emsp;尽量不要在父类构造函数中调用具有多态行为的函数，因为此时子类对象还未初始化，调用子类方法会产生意想不到的结果。  12345678910111213141516171819202122232425262728293031public class Test &amp;#123;    public static void main(String[]">
-<meta name="keywords" content="Java">
+  <meta name="description" content="父类构造函数中调用多态行为的函数&amp;emsp;&amp;emsp;尽量不要在父类构造函数中调用具有多态行为的函数，因为此时子类对象还未初始化，调用子类方法会产生意想不到的结果。">
+<meta name="keywords" content="笔记">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Java基础知识笔记">
 <meta property="og:url" content="http://yoursite.com/2018/06/11/Java基础知识笔记/index.html">
 <meta property="og:site_name" content="Eric&#39;s Blogs">
-<meta property="og:description" content="父类构造函数中调用多态行为的函数&amp;emsp;&amp;emsp;尽量不要在父类构造函数中调用具有多态行为的函数，因为此时子类对象还未初始化，调用子类方法会产生意想不到的结果。  12345678910111213141516171819202122232425262728293031public class Test &amp;#123;    public static void main(String[]">
+<meta property="og:description" content="父类构造函数中调用多态行为的函数&amp;emsp;&amp;emsp;尽量不要在父类构造函数中调用具有多态行为的函数，因为此时子类对象还未初始化，调用子类方法会产生意想不到的结果。">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2018-06-11T16:12:59.000Z">
+<meta property="og:updated_time" content="2019-03-23T16:28:08.548Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Java基础知识笔记">
-<meta name="twitter:description" content="父类构造函数中调用多态行为的函数&amp;emsp;&amp;emsp;尽量不要在父类构造函数中调用具有多态行为的函数，因为此时子类对象还未初始化，调用子类方法会产生意想不到的结果。  12345678910111213141516171819202122232425262728293031public class Test &amp;#123;    public static void main(String[]">
+<meta name="twitter:description" content="父类构造函数中调用多态行为的函数&amp;emsp;&amp;emsp;尽量不要在父类构造函数中调用具有多态行为的函数，因为此时子类对象还未初始化，调用子类方法会产生意想不到的结果。">
 
 
 
@@ -383,11 +383,29 @@
                 
                   <span class="post-meta-item-text">Edited on</span>
                 
-                <time title="Modified: 2018-06-12 00:12:59" itemprop="dateModified" datetime="2018-06-12T00:12:59+08:00">2018-06-12</time>
+                <time title="Modified: 2019-03-24 00:28:08" itemprop="dateModified" datetime="2019-03-24T00:28:08+08:00">2019-03-24</time>
               
             
           </span>
 
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Java/" itemprop="url" rel="index"><span itemprop="name">Java</span></a></span>
+
+                
+                
+              
+            </span>
           
 
           
@@ -418,7 +436,9 @@
 
       
         <ul>
-<li><h3 id="父类构造函数中调用多态行为的函数"><a href="#父类构造函数中调用多态行为的函数" class="headerlink" title="父类构造函数中调用多态行为的函数"></a>父类构造函数中调用多态行为的函数</h3>&emsp;&emsp;尽量不要在父类构造函数中调用具有多态行为的函数，因为此时子类对象还未初始化，调用子类方法会产生意想不到的结果。</li>
+<li><h3 id="父类构造函数中调用多态行为的函数"><a href="#父类构造函数中调用多态行为的函数" class="headerlink" title="父类构造函数中调用多态行为的函数"></a>父类构造函数中调用多态行为的函数</h3><p>&emsp;&emsp;尽量不要在父类构造函数中调用具有多态行为的函数，因为此时子类对象还未初始化，调用子类方法会产生意想不到的结果。</p>
+<a id="more"></a>
+</li>
 </ul>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line">public class Test &#123;</span><br><span class="line"></span><br><span class="line">    public static void main(String[] args) &#123;</span><br><span class="line">        new Tesla(100);</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">class Car &#123;</span><br><span class="line">    void run() &#123;</span><br><span class="line">        System.out.println(&quot;Car.run()&quot;);  </span><br><span class="line">    &#125;</span><br><span class="line">    Car() &#123;</span><br><span class="line">        System.out.println(&quot;Car before run()&quot;); --1</span><br><span class="line">        run();</span><br><span class="line">        System.out.println(&quot;Car after run()&quot;);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">class Tesla extends Car &#123;</span><br><span class="line">    private int meter = 1;</span><br><span class="line"></span><br><span class="line">    Tesla(int r) &#123;</span><br><span class="line">    	meter = r;</span><br><span class="line">        System.out.println(&quot;Tesla.Tesla().meter = &quot; + meter);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    void run() &#123;</span><br><span class="line">        System.out.println(&quot;Tesla.run().meter = &quot; + meter);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>&emsp;&emsp;输出结果：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">Car before run()</span><br><span class="line">Tesla.run().meter = 0</span><br><span class="line">Car after run()</span><br><span class="line">Tesla.Tesla().meter = 100</span><br></pre></td></tr></table></figure></p>
@@ -452,7 +472,7 @@
       
         <div class="post-tags">
           
-            <a href="/tags/Java/" rel="tag"># Java</a>
+            <a href="/tags/笔记/" rel="tag"># 笔记</a>
           
         </div>
       
@@ -548,7 +568,7 @@
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">16</span>
+                    <span class="site-state-item-count">15</span>
                     <span class="site-state-item-name">posts</span>
                   </a>
                 </div>
@@ -569,7 +589,9 @@
                     
                       
                     
-                    <span class="site-state-item-count">2</span>
+                      
+                    
+                    <span class="site-state-item-count">3</span>
                     <span class="site-state-item-name">categories</span>
                   </a>
                 </div>
@@ -622,7 +644,17 @@
                     
                       
                     
-                    <span class="site-state-item-count">18</span>
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">21</span>
                     <span class="site-state-item-name">tags</span>
                   </a>
                 </div>
